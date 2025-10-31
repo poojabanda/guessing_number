@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 Number Guessing Challenge</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, #1e3c72, #2a5298);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .game-container {
+      background: rgba(255,255,255,0.1);
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      padding: 30px;
+      width: 400px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #ff7e5f, #feb47b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      font-size: 14px;
+      color: #d1d5db;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #0072ff, #00c6ff);
+      transform: scale(1.05);
+    }
+    .message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .restart-btn {
+      margin-top: 15px;
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      color: #000;
+    }
+    .restart-btn:hover {
+      background: linear-gradient(90deg, #ffd200, #f7971e);
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>🎯 Guess The Number</h1>
+    <p>Pick a number between <strong>1</strong> and <strong>100</strong>. Can you guess it right?</p>
+    <input type="number" id="guessInput" placeholder="Enter your guess" />
+    <button id="guessBtn">Check Guess</button>
+    <div class="message" id="message">Let's start the game!</div>
+    <div class="stats">
+      <div>Attempts Left: <span id="attempts">10</span></div>
+      <div>Guesses: <span id="count">0</span></div>
+    </div>
+    <button class="restart-btn" id="restartBtn">🔄 Restart</button>
+  </div>
+
+  <script>
+    let secretNumber, attempts, count;
+    const message = document.getElementById('message');
+    const attemptsEl = document.getElementById('attempts');
+    const countEl = document.getElementById('count');
+    const guessInput = document.getElementById('guessInput');
+    const guessBtn = document.getElementById('guessBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    function newGame() {
+      secretNumber = Math.floor(Math.random() * 100) + 1;
+      attempts = 10;
+      count = 0;
+      message.textContent = "Let's start the game!";
+      attemptsEl.textContent = attempts;
+      countEl.textContent = count;
+      guessInput.disabled = false;
+      guessBtn.disabled = false;
+      guessInput.value = '';
+    }
+
+    function checkGuess() {
+      const guess = Number(guessInput.value);
+      if (!guess || guess < 1 || guess > 100) {
+        message.textContent = '⚠️ Please enter a number between 1 and 100!';
+        return;
+      }
+      count++;
+      attempts--;
+      countEl.textContent = count;
+      attemptsEl.textContent = attempts;
+
+      if (guess === secretNumber) {
+        message.textContent = `🎉 Correct! The number was ${secretNumber}.`;
+        message.style.color = '#00ff99';
+        guessInput.disabled = true;
+        guessBtn.disabled = true;
+      } else if (attempts === 0) {
+        message.textContent = `😢 Out of attempts! The number was ${secretNumber}.`;
+        message.style.color = '#ff4d4d';
+        guessInput.disabled = true;
+        guessBtn.disabled = true;
+      } else if (guess < secretNumber) {
+        message.textContent = '⬆️ Try a higher number!';
+        message.style.color = '#ffd700';
+      } else {
+        message.textContent = '⬇️ Try a lower number!';
+        message.style.color = '#ffd700';
+      }
+
+      guessInput.value = '';
+      guessInput.focus();
+    }
+
+    guessBtn.addEventListener('click', checkGuess);
+    restartBtn.addEventListener('click', newGame);
+
+    newGame();
+  </script>
+</body>
+</html>
